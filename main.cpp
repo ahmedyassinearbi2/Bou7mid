@@ -8,6 +8,22 @@
 #include <QApplication>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
+#include <QCoreApplication>
+#include "arduinoo.h"
+
+QString fetchDataFromDatabase() {
+    // Implement your database query here and return the data as QString
+    QString data = "Hello, World!"; // Placeholder for actual database data
+    return data;
+}
+
+// Method to send data to Arduino
+void sendDataToArduino(Arduino &arduino) {
+    QString data = fetchDataFromDatabase(); // Fetch data from database
+    QByteArray byteArray = data.toUtf8(); // Convert QString to QByteArray
+    arduino.write_to_arduino(byteArray); // Send data to Arduino
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -27,7 +43,13 @@ int main(int argc, char *argv[])
                     QObject::tr("connection failed.\n"
                                 "Click Cancel to exit."), QMessageBox::Cancel);
 
-
+    Arduino arduino;
+    if (arduino.connect_arduino() == 0) { // Connect to Arduino
+        sendDataToArduino(arduino); // Send data to Arduino
+        arduino.close_arduino(); // Close the connection after sending
+    } else {
+        qDebug() << "Failed to connect to Arduino.";
+    }
 
     return a.exec();
 }

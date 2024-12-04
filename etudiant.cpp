@@ -25,9 +25,9 @@ bool Product::addProduct()
     }
 
     QSqlQuery query;
-    query.prepare("INSERT INTO Products (id, product_name, price_unit, quantity) "
-                  "VALUES (:id, :product_name, :price_unit, :quantity)");
-    query.bindValue(":id", id);
+    query.prepare("INSERT INTO Products (product_name, price_unit, quantity) "
+                  "VALUES (:product_name, :price_unit, :quantity)");
+
     query.bindValue(":product_name", productName);
     query.bindValue(":price_unit", priceUnit);
     query.bindValue(":quantity", quantity);
@@ -70,7 +70,7 @@ QSqlQueryModel* Product::getAllProducts()
 {
     QSqlQueryModel *model = new QSqlQueryModel();
     QSqlQuery query;
-    query.prepare("SELECT id, product_name, price_unit, quantity FROM Products ORDER BY product_name ASC");
+    query.prepare("SELECT product_name, price_unit, quantity FROM Products ORDER BY product_name ASC");
 
     if (!query.exec()) {
         qDebug() << "Query Execution Error:" << query.lastError().text();
